@@ -98,7 +98,7 @@ func (info *DBInfo) GetTables() {
 		}
 		//fmt.Println("tables",info.tables)
 	}
-	//fmt.Println("tables",info.tables)
+	fmt.Println("tables",info.tables)
 }
 
 func (info *DBInfo) GetDataFromTable(table string){

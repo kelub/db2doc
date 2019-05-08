@@ -10,6 +10,8 @@ var user = "root"
 var passwd = "SDF-XSP-0056"
 var addr = "192.168.9.241:3306"
 var dbname = "192_168_9_230_player"
+var params = ""
+var dsn = ""
 
 var exclude = "t_player_new_red_ticket,t_hall_info"
 var file_dir = ""
@@ -20,6 +22,8 @@ var mapArgs = map[string]*string{
 	"dbname":  &dbname,
 	"exclude":  &exclude,
 	"file_dir": &file_dir,
+	"params": &params,
+	"dsn": &dsn,
 }
 
 /*
@@ -110,7 +114,7 @@ func Test_db_table(t *testing.T) {
 		"TABLE_NAME "+
 		"from INFORMATION_SCHEMA.TABLES "+
 		"where TABLE_SCHEMA = ?",
-		*mapArgs["dbname"])
+		opt.dbname)
 	if err != nil {
 		fmt.Println(err)
 		t.FailNow()
@@ -120,6 +124,7 @@ func Test_db_table(t *testing.T) {
 
 func Test_GetTables(t *testing.T) {
 	opt := NewOptions(mapArgs)
+	fmt.Println(opt)
 	me, err := NewMyEngine(opt)
 	if err != nil {
 		fmt.Println(err)
