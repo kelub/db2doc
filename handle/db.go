@@ -136,6 +136,7 @@ func (info *DBInfo) GetDataFromTable(table string){
 		}
 		results = append(results,row)
 	}
+	info.datas = make(map[string][]map[string]string)
 	info.datas[table] = results
 	fmt.Println("info.datas:",info.datas)
 }
