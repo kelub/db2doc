@@ -19,11 +19,11 @@ var mapArgs = map[string]*string{
 	"user":     &user,
 	"passwd":   &passwd,
 	"addr":     &addr,
-	"dbname":  &dbname,
+	"dbname":   &dbname,
 	"exclude":  &exclude,
 	"file_dir": &file_dir,
-	"params": &params,
-	"dsn": &dsn,
+	"params":   &params,
+	"dsn":      &dsn,
 }
 
 /*
@@ -125,26 +125,26 @@ func Test_db_table(t *testing.T) {
 func Test_GetTables(t *testing.T) {
 	opt := NewOptions(mapArgs)
 	fmt.Println(opt)
-	me, err := NewMyEngine(opt)
-	if err != nil {
-		fmt.Println(err)
-		t.FailNow()
-	}
+	//me, err := NewMyEngine(opt)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	t.FailNow()
+	//}
 	info := NewDBInfo()
-	info.MyEngine = me
+	//info.MyEngine = me
 	info.Opt = opt
 	info.GetTables()
 }
 
 func Test_GetDataFromTable(t *testing.T) {
 	opt := NewOptions(mapArgs)
-	me, err := NewMyEngine(opt)
-	if err != nil {
-		fmt.Println(err)
-		t.FailNow()
-	}
+	//me, err := NewMyEngine(opt)
+	//if err != nil {
+	//	fmt.Println(err)
+	//	t.FailNow()
+	//}
 	info := NewDBInfo()
-	info.MyEngine = me
+	//info.MyEngine = me
 	info.Opt = opt
 	info.GetTables()
 	info.GetDataFromTable(info.tables[0])

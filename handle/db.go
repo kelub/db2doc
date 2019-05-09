@@ -9,8 +9,8 @@ import (
 )
 
 type MyEngine struct {
-	DBname 	string
-	DB     	*sql.DB
+	DBname string
+	DB     *sql.DB
 }
 
 func getMysqlConfigs(opt *Options) (conf mysql.Config) {
@@ -51,21 +51,26 @@ func (me *MyEngine) Close() {
 }
 
 type DBInfo struct {
-	dbname 		string
-	tables   []string
-	*MyEngine
-	Opt	*Options
-	datas 	map[string][]map[string]string	// table:rows
+	dbname string
+	tables []string
+	//*MyEngine
+	Opt   *Options
+	datas map[string][]map[string]string // table:rows
 }
 
 func NewDBInfo() *DBInfo {
 	return &DBInfo{}
 }
 
+func (info *DBInfo) Main() (map[string][]map[string]string, error) {
+	info.GetTables()
+	return info.GetDataFromTable(info.tables[0])
+}
+
 func (info *DBInfo) GetTables() {
-	e,err := NewMyEngine(info.Opt)
-	if err != nil{
-		fmt.Println("获取 MyEngine 出错",err)
+	e, err := NewMyEngine(info.Opt)
+	if err != nil {
+		fmt.Println("获取 MyEngine 出错", err)
 	}
 	rows, err := e.DB.Query("select "+
 		"TABLE_NAME "+
@@ -90,21 +95,21 @@ func (info *DBInfo) GetTables() {
 	for rows.Next() {
 		rows.Scan(scanArgs...)
 		for _, v := range values {
-			for _,ex := range info.Opt.exclude{
-				if ex != string(v){
+			for _, ex := range info.Opt.exclude {
+				if ex != string(v) {
 					info.tables = append(info.tables, string(v))
 				}
 			}
 		}
 		//fmt.Println("tables",info.tables)
 	}
-	fmt.Println("tables",info.tables)
+	fmt.Println("tables", info.tables)
 }
 
-func (info *DBInfo) GetDataFromTable(table string){
-	e,err := NewMyEngine(info.Opt)
-	if err != nil{
-		fmt.Println("获取 MyEngine 出错",err)
+func (info *DBInfo) GetDataFromTable(table string) (map[string][]map[string]string, error) {
+	e, err := NewMyEngine(info.Opt)
+	if err != nil {
+		fmt.Println("获取 MyEngine 出错", err)
 	}
 	rows, err := e.DB.Query("select "+
 		"COLUMN_NAME, COLUMN_TYPE,COLUMN_KEY ,COLUMN_DEFAULT , IS_NULLABLE, COLUMN_COMMENT "+
@@ -114,29 +119,33 @@ func (info *DBInfo) GetDataFromTable(table string){
 	defer e.Close()
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil, err
 	}
 	columns, err := rows.Columns()
 	if err != nil {
 		fmt.Println(err)
-		return
+		return nil, err
 	}
 	values := make([]sql.RawBytes, len(columns))
 	scanArgs := make([]interface{}, len(columns))
 	for i := range values {
 		scanArgs[i] = &values[i]
 	}
-	var results  []map[string]string
-	for rows.Next(){
+	var results []map[string]string
+	for rows.Next() {
 		rows.Scan(scanArgs...)
 		row := make(map[string]string)
-		for k,v := range values{
+		//var columns_info []string
+		for k, v := range values {
 			key := columns[k]
 			row[key] = string(v)
+			//columns_info = append(columns_info,key)
 		}
-		results = append(results,row)
+		//row["columns"] = strings.Join(columns_info,",")
+		results = append(results, row)
 	}
 	info.datas = make(map[string][]map[string]string)
 	info.datas[table] = results
-	fmt.Println("info.datas:",info.datas)
+	fmt.Println("info.datas:", info.datas)
+	return info.datas, nil
 }
