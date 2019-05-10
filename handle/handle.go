@@ -16,6 +16,5 @@ func Main(mapArgs map[string]*string) error {
 		return err
 	}
 	mdfile := MDFile{}
-	mdfile.StructToLines(data,dbinfo.tables)
-	return nil
+	return mdfile.Main(data,dbinfo.tables)
 }

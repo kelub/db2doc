@@ -67,6 +67,15 @@ func (mf *MDFile) File(datas string) error {
 	return nil
 }
 
-func (mf *MDFile) Main(){
-
+func (mf *MDFile) Main(datas map[string][]map[string]string, tables []string)  error {
+	Lines ,err:= mf.StructToLines(datas, tables)
+	if err != nil{
+		fmt.Println("得到结构数据错误",err)
+		return  err
+	}
+	if err := mf.File(Lines); err != nil{
+		fmt.Println("写入数据出错",err)
+		return  err
+	}
+	return nil
 }
