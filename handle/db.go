@@ -111,8 +111,6 @@ func (info *DBInfo) GetTables() {
 			}
 		}
 	}
-
-	fmt.Println("tables", info.tables)
 }
 
 func (info *DBInfo) GetDataFromTable(table string) (map[string][]map[string]string, error) {
@@ -143,17 +141,13 @@ func (info *DBInfo) GetDataFromTable(table string) (map[string][]map[string]stri
 	for rows.Next() {
 		rows.Scan(scanArgs...)
 		row := make(map[string]string)
-		//var columns_info []string
 		for k, v := range values {
 			key := columns[k]
 			row[key] = string(v)
-			//columns_info = append(columns_info,key)
 		}
 		//row["columns"] = strings.Join(columns_info,",")
 		results = append(results, row)
 	}
-	info.datas = make(map[string][]map[string]string)
 	info.datas[table] = results
-	fmt.Println("info.datas:", info.datas)
 	return info.datas, nil
 }

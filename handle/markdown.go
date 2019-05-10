@@ -21,7 +21,7 @@ func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname stri
 	var md = []string{}
 	//tables = tables[:1]
 
-	md_h1 := fmt.Sprintf("# %s \n", dbname)
+	md_h1 := fmt.Sprintf("# %s", dbname)
 	md = append(md, md_h1)
 
 	var md_cloumn, md_cloumn_line string
@@ -29,10 +29,9 @@ func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname stri
 	for i := 0; i < len(columns); i++ {
 		md_cloumn_line = md_cloumn_line + "---|"
 	}
-
 	for _, v := range tables {
 		table := datas[v]
-		md_h2 := fmt.Sprintf("## %s \n", v)
+		md_h2 := fmt.Sprintf("\n\n## %s \n", v)
 		md = append(md, md_h2)
 
 		md = append(md, md_cloumn)
@@ -46,9 +45,7 @@ func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname stri
 			md = append(md, line)
 		}
 	}
-	//fmt.Println(md)
 	mds := strings.Join(md,"\n") + "\n\n"
-	fmt.Println("mds:\n",mds)
 	return mds, nil
 }
 

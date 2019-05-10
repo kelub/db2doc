@@ -33,10 +33,11 @@ func Main(mapArgs map[string]*string) error {
 	dbinfo := NewDBInfo()
 	dbinfo.Opt = opt
 	dbinfo.Columns = Columns
+	dbinfo.datas = make(map[string][]map[string]string)
 	data, err := dbinfo.Main()
 	if err != nil {
 		return err
 	}
 	mdfile := MDFile{}
-	return mdfile.Main(data,dbinfo.dbname,dbinfo.tables,dbinfo.Columns)
+	return mdfile.Main(data,dbinfo.Opt.dbname,dbinfo.tables,dbinfo.Columns)
 }
