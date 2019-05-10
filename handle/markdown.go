@@ -6,7 +6,6 @@ import (
 	"github.com/Sirupsen/logrus"
 	"gitlab.com/golang-commonmark/markdown"
 	"os"
-	"sort"
 	"strings"
 )
 
@@ -18,39 +17,38 @@ func (mf *MDFile) Show() {
 	fmt.Println(md.RenderToString([]byte("Header\n===\nText")))
 }
 
-func (mf *MDFile) StructToLines(datas map[string][]map[string]string, tables []string) (string, error) {
+func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname string, tables []string, columns []string) (string, error) {
 	var md = []string{}
-	tables = tables[:1]
+	//tables = tables[:1]
+
+	md_h1 := fmt.Sprintf("# %s \n", dbname)
+	md = append(md, md_h1)
+
+	var md_cloumn, md_cloumn_line string
+	md_cloumn = strings.Join(columns," | ")
+	for i := 0; i < len(columns); i++ {
+		md_cloumn_line = md_cloumn_line + "---|"
+	}
+
 	for _, v := range tables {
 		table := datas[v]
-		md_h1 := fmt.Sprintf("# %s", v)
-		md = append(md, md_h1)
+		md_h2 := fmt.Sprintf("## %s \n", v)
+		md = append(md, md_h2)
 
-		var keys = []string{}
-		for key, _ := range table[0] {
-			keys = append(keys, key)
-		}
-		//排序 字段
-		sort.Sort(sort.StringSlice(keys))
-		var md_cloumn, md_cloumn_line string
-		md_cloumn = strings.Join(keys," | ")
-
-		for i := 0; i < len(keys); i++ {
-			md_cloumn_line = md_cloumn_line + "---|"
-		}
 		md = append(md, md_cloumn)
 		md = append(md, md_cloumn_line)
+
 		for i := 0; i < len(table); i++ {
 			var line string
-			for j := 0; j < len(keys); j++ {
-				line = line + table[i][keys[j]] + " | "
+			for j := 0; j < len(columns); j++ {
+				line = line + table[i][columns[j]] + " | "
 			}
 			md = append(md, line)
 		}
 	}
-	fmt.Println(md)
+	//fmt.Println(md)
 	mds := strings.Join(md,"\n") + "\n\n"
-	fmt.Println(mds)
+	fmt.Println("mds:\n",mds)
 	return mds, nil
 }
 
@@ -67,8 +65,8 @@ func (mf *MDFile) File(datas string) error {
 	return nil
 }
 
-func (mf *MDFile) Main(datas map[string][]map[string]string, tables []string)  error {
-	Lines ,err:= mf.StructToLines(datas, tables)
+func (mf *MDFile) Main(datas map[string][]map[string]string,dbname string, tables []string, columns []string)  error {
+	Lines ,err:= mf.StructToLines(datas,dbname, tables,columns)
 	if err != nil{
 		fmt.Println("得到结构数据错误",err)
 		return  err

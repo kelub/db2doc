@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/go-sql-driver/mysql"
+	"strings"
 	"time"
 )
 
@@ -53,6 +54,7 @@ func (me *MyEngine) Close() {
 type DBInfo struct {
 	dbname string
 	tables []string
+	Columns []string
 	//*MyEngine
 	Opt   *Options
 	datas map[string][]map[string]string // table:rows
@@ -64,7 +66,10 @@ func NewDBInfo() *DBInfo {
 
 func (info *DBInfo) Main() (map[string][]map[string]string, error) {
 	info.GetTables()
-	return info.GetDataFromTable(info.tables[0])
+	for i := 0;i< len(info.tables);i++{
+		info.GetDataFromTable(info.tables[i])
+	}
+	return info.datas, nil
 }
 
 func (info *DBInfo) GetTables() {
@@ -95,14 +100,18 @@ func (info *DBInfo) GetTables() {
 	for rows.Next() {
 		rows.Scan(scanArgs...)
 		for _, v := range values {
-			for _, ex := range info.Opt.exclude {
-				if ex != string(v) {
-					info.tables = append(info.tables, string(v))
-				}
+			info.tables = append(info.tables, string(v))
+		}
+	}
+	ex := info.Opt.exclude
+	for i := 0;i<len(ex);i++{
+		for j := 0;j<len(info.tables);j++{
+			if ex[i] == info.tables[j]{
+				info.tables = append(info.tables[:j],info.tables[j+1:]... )
 			}
 		}
-		//fmt.Println("tables",info.tables)
 	}
+
 	fmt.Println("tables", info.tables)
 }
 
@@ -111,10 +120,9 @@ func (info *DBInfo) GetDataFromTable(table string) (map[string][]map[string]stri
 	if err != nil {
 		fmt.Println("获取 MyEngine 出错", err)
 	}
-	rows, err := e.DB.Query("select "+
-		"COLUMN_NAME, COLUMN_TYPE,COLUMN_KEY ,COLUMN_DEFAULT , IS_NULLABLE, COLUMN_COMMENT "+
-		"from INFORMATION_SCHEMA.COLUMNS "+
-		"where TABLE_SCHEMA = ? and TABLE_NAME = ?",
+	rows, err := e.DB.Query("select "+ strings.Join(info.Columns, ", ") +
+		" from INFORMATION_SCHEMA.COLUMNS "+
+		" where TABLE_SCHEMA = ? and TABLE_NAME = ?",
 		info.Opt.dbname, table)
 	defer e.Close()
 	if err != nil {

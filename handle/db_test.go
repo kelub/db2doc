@@ -13,7 +13,7 @@ var dbname = "192_168_9_230_player"
 var params = ""
 var dsn = ""
 
-var exclude = "t_player_new_red_ticket,t_hall_info"
+var exclude = "t_player_new_red_ticket,t_hall_info,t_player,t_player_code,t_player_props,t_player_red_ticket,t_robot,t_show_id,t_player_mail,t_player_extend,t_player_currency"
 var file_dir = ""
 var mapArgs = map[string]*string{
 	"user":     &user,
