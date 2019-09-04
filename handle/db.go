@@ -52,8 +52,8 @@ func (me *MyEngine) Close() {
 }
 
 type DBInfo struct {
-	dbname string
-	tables []string
+	dbname  string
+	tables  []string
 	Columns []string
 	//*MyEngine
 	Opt   *Options
@@ -66,7 +66,7 @@ func NewDBInfo() *DBInfo {
 
 func (info *DBInfo) Main() (map[string][]map[string]string, error) {
 	info.GetTables()
-	for i := 0;i< len(info.tables);i++{
+	for i := 0; i < len(info.tables); i++ {
 		info.GetDataFromTable(info.tables[i])
 	}
 	return info.datas, nil
@@ -104,10 +104,10 @@ func (info *DBInfo) GetTables() {
 		}
 	}
 	ex := info.Opt.exclude
-	for i := 0;i<len(ex);i++{
-		for j := 0;j<len(info.tables);j++{
-			if ex[i] == info.tables[j]{
-				info.tables = append(info.tables[:j],info.tables[j+1:]... )
+	for i := 0; i < len(ex); i++ {
+		for j := 0; j < len(info.tables); j++ {
+			if ex[i] == info.tables[j] {
+				info.tables = append(info.tables[:j], info.tables[j+1:]...)
 			}
 		}
 	}
@@ -118,7 +118,7 @@ func (info *DBInfo) GetDataFromTable(table string) (map[string][]map[string]stri
 	if err != nil {
 		fmt.Println("获取 MyEngine 出错", err)
 	}
-	rows, err := e.DB.Query("select "+ strings.Join(info.Columns, ", ") +
+	rows, err := e.DB.Query("select "+strings.Join(info.Columns, ", ")+
 		" from INFORMATION_SCHEMA.COLUMNS "+
 		" where TABLE_SCHEMA = ? and TABLE_NAME = ?",
 		info.Opt.dbname, table)

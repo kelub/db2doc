@@ -17,7 +17,7 @@ func (mf *MDFile) Show() {
 	fmt.Println(md.RenderToString([]byte("Header\n===\nText")))
 }
 
-func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname string, tables []string, columns []string) (string, error) {
+func (mf *MDFile) StructToLines(datas map[string][]map[string]string, dbname string, tables []string, columns []string) (string, error) {
 	var md = []string{}
 	//tables = tables[:1]
 
@@ -25,7 +25,7 @@ func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname stri
 	md = append(md, md_h1)
 
 	var md_cloumn, md_cloumn_line string
-	md_cloumn = strings.Join(columns," | ")
+	md_cloumn = strings.Join(columns, " | ")
 	for i := 0; i < len(columns); i++ {
 		md_cloumn_line = md_cloumn_line + "---|"
 	}
@@ -45,7 +45,7 @@ func (mf *MDFile) StructToLines(datas map[string][]map[string]string,dbname stri
 			md = append(md, line)
 		}
 	}
-	mds := strings.Join(md,"\n") + "\n\n"
+	mds := strings.Join(md, "\n") + "\n\n"
 	return mds, nil
 }
 
@@ -62,15 +62,15 @@ func (mf *MDFile) File(datas string) error {
 	return nil
 }
 
-func (mf *MDFile) Main(datas map[string][]map[string]string,dbname string, tables []string, columns []string)  error {
-	Lines ,err:= mf.StructToLines(datas,dbname, tables,columns)
-	if err != nil{
-		fmt.Println("得到结构数据错误",err)
-		return  err
+func (mf *MDFile) Main(datas map[string][]map[string]string, dbname string, tables []string, columns []string) error {
+	Lines, err := mf.StructToLines(datas, dbname, tables, columns)
+	if err != nil {
+		fmt.Println("得到结构数据错误", err)
+		return err
 	}
-	if err := mf.File(Lines); err != nil{
-		fmt.Println("写入数据出错",err)
-		return  err
+	if err := mf.File(Lines); err != nil {
+		fmt.Println("写入数据出错", err)
+		return err
 	}
 	return nil
 }

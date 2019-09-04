@@ -1,7 +1,7 @@
 package main
 
 import (
-	"db2doc/cmd"
+	"kelub/db2doc/cmd"
 )
 
 func main() {

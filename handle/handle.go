@@ -39,5 +39,5 @@ func Main(mapArgs map[string]*string) error {
 		return err
 	}
 	mdfile := MDFile{}
-	return mdfile.Main(data,dbinfo.Opt.dbname,dbinfo.tables,dbinfo.Columns)
+	return mdfile.Main(data, dbinfo.Opt.dbname, dbinfo.tables, dbinfo.Columns)
 }

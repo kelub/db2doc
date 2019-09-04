@@ -6,14 +6,14 @@ import (
 	"testing"
 )
 
-var user = "root"
-var passwd = "SDF-XSP-0056"
-var addr = "192.168.9.241:3306"
-var dbname = "192_168_9_230_player"
+var user = "test"
+var passwd = "123456"
+var addr = "127.0.0.1:3306"
+var dbname = "king"
 var params = ""
 var dsn = ""
 
-var exclude = "t_player_new_red_ticket,t_hall_info,t_player,t_player_code,t_player_props,t_player_red_ticket,t_robot,t_show_id,t_player_mail,t_player_extend,t_player_currency"
+var exclude = "exclude1,exclude2"
 var file_dir = ""
 var mapArgs = map[string]*string{
 	"user":     &user,
@@ -78,15 +78,6 @@ func Test_db(t *testing.T) {
 		fmt.Println(err)
 		t.FailNow()
 	}
-	//rows, err := me.db.Query("select * from t_player_id")
-	//columns, err := rows.Columns()
-	//if err != nil {
-	//	fmt.Println(err)
-	//	t.FailNow()
-	//}
-	//fmt.Println("columns:", columns)
-	//fmt.Println("rows:", rows)
-
 	rows, err := me.DB.Query("select "+
 		"COLUMN_NAME, COLUMN_TYPE,COLUMN_KEY ,COLUMN_DEFAULT , IS_NULLABLE, COLUMN_COMMENT "+
 		"from INFORMATION_SCHEMA.COLUMNS "+

@@ -1,12 +1,11 @@
 package cmd
 
 import (
-	"db2doc/handle"
 	"fmt"
-	"os"
-	//homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"kelub/db2doc/handle"
+	"os"
 )
 
 var cfgFile string
